@@ -41,8 +41,8 @@ ret = api.set_session(userid=credentials.user, password=credentials.u_pwd, usert
 #CHECKING DIFFERENCE BETWEEN LTP
 puttoken = api.get_quotes('NFO', PUT)['token']
 calltoken = api.get_quotes('NFO', CALL)['token']
-newcalltoken = api.get_quotes('NFO', NEWCALL)['token']
-newputtoken = api.get_quotes('NFO', NEWPUT)['token']
+# newcalltoken = api.get_quotes('NFO', NEWCALL)['token']
+# newputtoken = api.get_quotes('NFO', NEWPUT)['token']
 puthedgetoken = api.get_quotes('NFO', PUTHEDGE)['token']
 callhedgetoken = api.get_quotes('NFO', CALLHEDGE)['token']
 #######
@@ -89,7 +89,6 @@ if trade == 0:
         # time.sleep(1)
         atmputltp = feedJson[puttoken]['ltp']
         time.sleep(1)
-        print(atmputltp)
         atmcallltp = feedJson[calltoken]['ltp']
         time.sleep(1)
         otmcallltp = feedJson[callhedgetoken]['ltp']
@@ -136,10 +135,22 @@ if trade == 0:
         # print("finalpe",finalpe)
         # print("finalchedge",finalchedge)
         # print("finalphedge",finalphedge)
+        import colorama
+        from colorama import Fore,Back,Style
+        colorama.init()
+        import os
         atmpl = finalce + finalpe
         otmpl = finalchedge + finalphedge
         current_profit_or_loss = (atmpl + otmpl+ bookedpoints) * 25
         print(current_profit_or_loss)
+        if current_profit_or_loss >= 0:
+            print(Style.BRIGHT+Fore.GREEN+"PROFIT of = ",current_profit_or_loss)
+            time.sleep(1)
+            os.system('clear')
+        if current_profit_or_loss <= 0:
+            print(Style.BRIGHT+Fore.RED+"LOSS of = ",current_profit_or_loss)
+            time.sleep(1)
+            os.system('clear')
         if current_profit_or_loss >= 2000:
             print("TARGET REACHED")
             url = f"https://api.telegram.org/bot{TTOKEN}/sendMessage?chat_id={chatid}&text={TARGET}"
