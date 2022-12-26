@@ -6,23 +6,23 @@ api = ShoonyaApiPy()
 
 #################################
 
-PUT = "BANKNIFTY29DEC22P42400"
+PUT = "BANKNIFTY05JAN23P41400"
 
 #################################
 
-CALL = "BANKNIFTY29DEC22C42300"
+CALL = "BANKNIFTY05JAN23C43600"
 
 ##################################
 
-PUTHEDGE = "BANKNIFTY29DEC22P40500"
-CALLHEDGE = "BANKNIFTY29DEC22C42700"
+PUTHEDGE = "BANKNIFTY05JAN23P40400"
+CALLHEDGE = "BANKNIFTY05JAN23C44200"
 #################################
 # NEWCALL = "BANKNIFTY29DEC22C42700"
 # NEWPUT = "BANKNIFTY29DEC22P40500"
 ################################
-trade=1
-bookedpoints = 79.4+51.7+71.75
-total = 672
+trade=0
+bookedpoints = 0
+total = 0
 TARGET = "2K TARGET REACHED MOWAAA"
 ADJUSTCE = "CE ADJUST CHEYY MOWAA"
 ADJUSTPE = "PE ADJUST CHEYY MOWAA"
