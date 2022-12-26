@@ -5,21 +5,28 @@ import time
 api = ShoonyaApiPy()
 
 #################################
-PUT = "BANKNIFTY29DEC22P41000"
+
+PUT = "BANKNIFTY29DEC22P42400"
+
+#################################
+
 CALL = "BANKNIFTY29DEC22C42300"
+
+##################################
+
 PUTHEDGE = "BANKNIFTY29DEC22P40500"
 CALLHEDGE = "BANKNIFTY29DEC22C42700"
 #################################
 # NEWCALL = "BANKNIFTY29DEC22C42700"
 # NEWPUT = "BANKNIFTY29DEC22P40500"
 ################################
-trade=0
-bookedpoints = 0
-
+trade=1
+bookedpoints = 79.4+51.7+71.75
+total = 672
 TARGET = "2K TARGET REACHED MOWAAA"
 ADJUSTCE = "CE ADJUST CHEYY MOWAA"
 ADJUSTPE = "PE ADJUST CHEYY MOWAA"
-
+STRADDLE = "STRADDLE EXIT AVVU MOWAA INKAA"
 TTOKEN = "5845408044:AAHiVh3g2EicS8ZyDnWxS_JA5qtZzluhVCo"
 # url = f"https://api.telegram.org/bot{TOKEN}/getUpdates"
 # print(requests.get(url).json())
@@ -95,6 +102,8 @@ if trade == 0:
         time.sleep(1)
         otmputltp = feedJson[puthedgetoken]['ltp']
         time.sleep(1)
+        #finalrun = (atmputltp+atmcallltp)+(0.1*(atmputltp+atmcallltp))
+       
         ######################################################################
         cp_pehedge = round(int(float(otmputltp)))
         cp_cehedge = round(int(float(otmcallltp)))
@@ -164,6 +173,73 @@ if trade == 0:
         if peltp_2 < 50:
             print("BOOK PE LEG")
             url = f"https://api.telegram.org/bot{TTOKEN}/sendMessage?chat_id={chatid}&text={ADJUSTPE}    {atmcallltp}  BELOW PREMIUM SELL CHEYY MOWAA"
+            requests.get(url).json()  # this sends the message
+            break
+if trade == 1:
+    while True:
+
+        atmputltp = feedJson[puttoken]['ltp']
+        time.sleep(1)
+        print(atmputltp)
+        atmcallltp = feedJson[calltoken]['ltp']
+        time.sleep(1)
+        otmcallltp = feedJson[callhedgetoken]['ltp']
+        time.sleep(1)
+        otmputltp = feedJson[puthedgetoken]['ltp']
+        time.sleep(1)
+        finalrun = atmputltp+atmcallltp
+        ######################################################################
+        cp_pehedge = round(int(float(otmputltp)))
+        cp_cehedge = round(int(float(otmcallltp)))
+        cp_ceatm = round(int(float(atmcallltp)))
+        cp_putatm = round(int(float(atmputltp)))
+        ####################################################################
+        celtp_2 = round(int(float(atmcallltp / atmputltp) * 100))
+        peltp_2 = round(int(float(atmputltp / atmcallltp) * 100))
+        # print(celtp_2)
+        # print(peltp_2)
+        # exit()
+        #################################################################
+        import pricedata
+        import plcalculation
+
+        #################################################################
+        if cp_pehedge >= pricedata.PEBUY:
+            finalphedge = round(-(pricedata.PEBUY - cp_pehedge))
+        if cp_pehedge <= pricedata.PEBUY:
+            finalphedge = round(cp_pehedge - pricedata.PEBUY)
+            ###################################
+        if cp_cehedge >= pricedata.CEBUY:
+            finalchedge = round(-(pricedata.CEBUY - cp_cehedge))
+        if cp_cehedge <= pricedata.CEBUY:
+            finalchedge = round(cp_cehedge - pricedata.CEBUY)
+            ##################################
+        if cp_ceatm >= pricedata.CESELL:
+            finalce = round(pricedata.CESELL - cp_ceatm)
+        if cp_ceatm <= pricedata.CESELL:
+            finalce = round(pricedata.CESELL - cp_ceatm)
+            #################################
+        if cp_putatm >= pricedata.PESELL:
+            finalpe = round(pricedata.PESELL - cp_putatm)
+        if cp_putatm <= pricedata.PESELL:
+            finalpe = round(pricedata.PESELL - cp_putatm)
+            #################################
+        # print("finalce",finalce)
+        # print("finalpe",finalpe)
+        # print("finalchedge",finalchedge)
+        # print("finalphedge",finalphedge)
+        atmpl = finalce + finalpe
+        otmpl = finalchedge + finalphedge
+        current_profit_or_loss = (atmpl + otmpl + bookedpoints) * 25
+        print(current_profit_or_loss)
+        if finalrun >=total:
+            print("EXIT STRADDLE NOW")
+            url = f"https://api.telegram.org/bot{TTOKEN}/sendMessage?chat_id={chatid}&text={STRADDLE}"
+            requests.get(url).json()  # this sends the message
+            break
+        if current_profit_or_loss >= 2000:
+            print("TARGET REACHED")
+            url = f"https://api.telegram.org/bot{TTOKEN}/sendMessage?chat_id={chatid}&text={TARGET}"
             requests.get(url).json()  # this sends the message
             break
 
